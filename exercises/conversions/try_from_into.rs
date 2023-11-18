@@ -27,8 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
 // integers, an array of three integers, and a slice of integers.
@@ -41,6 +39,20 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        Ok(Color {
+            red: match tuple.0.try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            green: match tuple.1.try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            blue: match tuple.2.try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            }
+        })
     }
 }
 
@@ -48,6 +60,20 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        Ok(Color {
+            red: match arr[0].try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            green: match arr[1].try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            blue: match arr[2].try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            }
+        })
     }
 }
 
@@ -55,6 +81,24 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(IntoColorError::BadLen);
+        }
+        let mut ss = slice.iter();
+        Ok(Color {
+            red: match (*ss.next().expect("unreachable")).try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            green: match (*ss.next().expect("unreachable")).try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            },
+            blue: match (*ss.next().expect("unreachable")).try_into() {
+                Ok(x) => x,
+                Err(_) => return Err(IntoColorError::IntConversion)
+            }
+        })
     }
 }
 
